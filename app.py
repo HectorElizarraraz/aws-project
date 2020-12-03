@@ -12,7 +12,7 @@ logging.basicConfig(level=logging.DEBUG)
 app = Flask(__name__)
 app.secret_key = 'hjkdjeuqoe157!@'
 
-#Connecting to MySQL instance RDS
+# Connecting to MySQL instance RDS
 try:
     db = pymysql.connect(
         host = customhost,
@@ -49,7 +49,7 @@ def register():
             usr_name    = form.username.data
             passwd      = sha256_crypt.encrypt((str(form.password.data)))
 
-            #Checking for duplicate username
+            # Checking for duplicate username
             cursor = db.cursor()
             x = cursor.execute("SELECT * FROM User_info WHERE username=(%s)", (usr_name))
             cursor.close()
@@ -155,7 +155,14 @@ def change_password(username):
         error = str(e)
         return render_template('change_password.html', error=error, username=username)
 
+@app.route('/dashboard/upload/<string:username>' , methods = ['GET', 'POST'])
+@login_required
+def upload(username):
+    print("Upload")
+#   UPLOAD_FOLDER = 'path/to/the/upload'
+#   ALLOWED_EXTENSIONS = {'txt'}
 
+    return render_template('upload.html')
 
 if __name__ == "__main__":
     app.run(debug=True)
